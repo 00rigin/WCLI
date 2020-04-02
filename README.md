@@ -16,7 +16,15 @@ and then for each detected object it extracts embeddings using re-identification
 2. All embeddings are passed to tracker which assigns an ID to each object.
 3. The demo visualizes the resulting bounding boxes and unique object IDs assigned during tracking.
 
-## Running
+## Ready
+
+### ready for NCS2
+
+```bash
+source setupvars.sh
+cd install_dependencies
+./install_NCS_udev_rules.sh
+```
 
 ### Installation of dependencies
 
@@ -26,13 +34,14 @@ To install required dependencies run
 pip3 install -r requirements.txt
 ```
 
+## Running
 ### Command line arguments
 
-First, we have to ready for NCS2
-```bash
+1. connect NCS2
+```
 source setupvars.sh
 ```
-```
+2. choose at bellow
 # videos
 python3 multi_camera_multi_person_tracking.py \
     -i video8.mp4 video9.mp4\
@@ -55,3 +64,4 @@ The demo displays bounding boxes of tracked objects and unique IDs of those obje
 To save output video with the result please use the option  `--output_video`, to change configuration parameters please open the `config.py` file and edit it.
 
 Also demo can dump resulting tracks to a json file. To specify the file use the `--history_file` argument.
+
