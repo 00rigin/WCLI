@@ -1,4 +1,4 @@
-# Multi Camera Multi Person Python* Demo
+# Multi Camera Multi Person Tracking
 
 ## How It Works
 
