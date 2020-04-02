@@ -42,6 +42,7 @@ pip3 install -r requirements.txt
 source setupvars.sh
 ```
 2. choose at bellow
+```
 # videos
 python3 multi_camera_multi_person_tracking.py \
     -i video8.mp4 video9.mp4\
