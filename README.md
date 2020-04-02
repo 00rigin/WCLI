@@ -1,7 +1,5 @@
 # Multi Camera Multi Person Python* Demo
 
-This demo demonstrates how to run Multi Camera Multi Person demo using OpenVINO<sup>TM</sup>.
-
 ## How It Works
 
 The demo expects the next models in the Intermediate Representation (IR) format:
@@ -9,14 +7,7 @@ The demo expects the next models in the Intermediate Representation (IR) format:
    * Person detection model
    * Person re-identification model
 
-It can be your own models or pre-trained model from OpenVINO Open Model Zoo.
-In the `models.lst` are the list of appropriate models for this demo
-that can be obtained via `Model downloader`.
-Please see more information about `Model downloader` [here](../../../tools/downloader/README.md).
-
-As input, the demo application takes:
-* paths to several video files specified with a command line argument `--videos`
-* indexes of web cameras specified with a command line argument `--cam_ids`
+If you want other model 
 
 The demo workflow is the following:
 
@@ -37,71 +28,26 @@ pip3 install -r requirements.txt
 
 ### Command line arguments
 
-Run the application with the `-h` option to see the following usage message:
-
+First, we have to ready for NCS2
+```bash
+source setupvars.sh
 ```
-usage: multi_camera_multi_person_tracking.py [-h] -i I [I ...] -m M_DETECTOR
-                                             [--t_detector T_DETECTOR]
-                                             --m_reid M_REID
-                                             [--output_video OUTPUT_VIDEO]
-                                             [--config CONFIG]
-                                             [--history_file HISTORY_FILE]
-                                             [-d DEVICE] [-l CPU_EXTENSION]
-
-Multi camera multi person tracking live demo script
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -i I [I ...]          Input sources (indexes of cameras or paths to video
-                        files)
-  -m M_DETECTOR, --m_detector M_DETECTOR
-                        Path to the person detection model
-  --t_detector T_DETECTOR
-                        Threshold for the person detection model
-  --m_reid M_REID       Path to the person reidentification model
-  --output_video OUTPUT_VIDEO
-  --config CONFIG
-  --history_file HISTORY_FILE
-  -d DEVICE, --device DEVICE
-  -l CPU_EXTENSION, --cpu_extension CPU_EXTENSION
-                        MKLDNN (CPU)-targeted custom layers.Absolute path to a
-                        shared library with the kernels impl.
-  --no_show             Optional. Don't show output
-```
-Minimum command examples to run the demo:
-
 ```
 # videos
-python multi_camera_multi_person_tracking.py \
-    -i path/to/video_1.avi path/to/video_2.avi \
-    -d path/to/person-detection-retail-0013.xml \
-    -r path/to/person-reidentification-retail-0076.xml \
-    --config config.py
-
 python3 multi_camera_multi_person_tracking.py \
-    -i video1.avi video2.avi \
+    -i video8.mp4 video9.mp4\
     --m_detector /home/whatacg/intel/openvino_2020.1.023/deployment_tools/tools/model_downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml \
     --m_reid /home/whatacg/intel/openvino_2020.1.023/deployment_tools/tools/model_downloader/intel/person-reidentification-retail-0103/FP32/person-reidentification-retail-0103.xml \
-    --config config.py
-
-# web-cameras
-python multi_camera_multi_person_tracking.py \
-    -i 0 1 \
-    -d path/to/person-detection-retail-0013.xml \
-    -r path/to/person-reidentification-retail-0076.xml \
     --config config.py
 ```
+```
+# webcam
 python3 multi_camera_multi_person_tracking.py \
-    -i 0 1 \
+    -i 0 1\
     --m_detector /home/whatacg/intel/openvino_2020.1.023/deployment_tools/tools/model_downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml \
     --m_reid /home/whatacg/intel/openvino_2020.1.023/deployment_tools/tools/model_downloader/intel/person-reidentification-retail-0103/FP32/person-reidentification-retail-0103.xml \
     --config config.py
-
-
-
-
-
-
+```
 
 ## Demo Output
 
