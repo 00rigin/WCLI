@@ -45,19 +45,24 @@ source setupvars.sh
 ```
 # videos
 python3 multi_camera_multi_person_tracking.py \
-    -i video8.mp4 video9.mp4\
-    --m_detector /home/whatacg/intel/openvino_2020.1.023/deployment_tools/tools/model_downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml \
-    --m_reid /home/whatacg/intel/openvino_2020.1.023/deployment_tools/tools/model_downloader/intel/person-reidentification-retail-0103/FP32/person-reidentification-retail-0103.xml \
+    -i video4.mp4\
+    --m_detector model/person-detection-retail-0013/FP32/person-detection-retail-0013.xml \
+    --m_reid model/person-reidentification-retail-0103/FP32/person-reidentification-retail-0103.xml \
     --config config.py
 ```
 ```
 # webcam
 python3 multi_camera_multi_person_tracking.py \
     -i 0 1\
-    --m_detector /home/whatacg/intel/openvino_2020.1.023/deployment_tools/tools/model_downloader/intel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml \
-    --m_reid /home/whatacg/intel/openvino_2020.1.023/deployment_tools/tools/model_downloader/intel/person-reidentification-retail-0103/FP32/person-reidentification-retail-0103.xml \
+    --m_detector moodel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml \
+    --m_reid model/person-reidentification-retail-0103/FP32/person-reidentification-retail-0103.xml \
     --config config.py
 ```
+
+### 피쳐값 위치
+sct.py 에서 sct.get_tracks() 에서 튜플로 id, box location, feature 저장되있음 
+
+
 
 ## Demo Output
 

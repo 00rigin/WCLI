@@ -1,15 +1,3 @@
-"""
- Copyright (c) 2019 Intel Corporation
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-      http://www.apache.org/licenses/LICENSE-2.0
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
-"""
 
 import queue
 
@@ -45,9 +33,16 @@ class MultiCameraTracker:
             else:
                 mask = None
             sct.process(frames[i], all_detections[i], mask)
-            """print("*******************************************")
+
+            """
+            print("*******************************************")
             print("get_tracks: ", sct.get_tracks())
-            while(True): a = 1"""
+            
+            while(True): a = 1
+            """
+            """
+            sct.get_tracks() : 하면 tuple 형식으로 id 와 좌표, 피쳐값 저장됨.
+            """
             all_tracks += sct.get_tracks()
             
 
