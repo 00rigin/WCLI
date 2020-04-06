@@ -86,12 +86,16 @@ def run(params, capture, detector, reid): #params : args 임
         print("all_mask: ", all_masks)
         """
 
-        tracker.process(frames, all_detections, all_masks)
+        # 원본
+        #tracker.process(frames, all_detections, all_masks)
+        feature_data = tracker.process(frames, all_detections, all_masks)
+        tracker.make_file(feature_data)
         tracked_objects = tracker.get_tracked_objects()
 
-        """print("###################################")"""
-        #print(tracked_objects)
-        
+        """
+        print("###################################")
+        print(tracked_objects)
+        """
         ####################################################
         # ID 0 번만 찾게 만들기 (가상)
         """

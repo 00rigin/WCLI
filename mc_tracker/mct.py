@@ -6,6 +6,12 @@ from scipy.spatial.distance import cosine
 
 from .sct import SingleCameraTracker, clusters_distance, THE_BIGGEST_DISTANCE
 
+# for jason
+import json
+from collections import OrderedDict
+import codecs
+
+
 
 class MultiCameraTracker:
     def __init__(self, num_sources, reid_model,
@@ -24,6 +30,27 @@ class MultiCameraTracker:
                                                  self._release_global_id,
                                                  reid_model, **sct_config))
 
+    def make_file(self, _list):
+        file_data = OrderedDict()
+        #file_data = _list
+        #print(json.dumps(file_data, ensure_ascii=False, indent="\t"))
+        #print(type(_list[0]['features'][0]))
+        
+        for i in range(len(_list)):
+            _temp = []
+            file_data["id"] = _list[i]['id']
+            file_data["cam_id"] = _list[i]['cam_id']
+            file_data["f_cluster"] = "<mc_tracker.sct.ClusterFeature object at 0x7f0ed18d7a58>"
+            for j in range(len(_list[i]['features'])):
+                _temp.append(_list[i]['features'][j].tolist())
+            #_temp = [_list[i]['features'][x] for x in range(len(_list[i]['features']))].tolist()
+            #_temp = _list[i]['features'][0].tolist()
+            file_data["features"] = _temp#_list[i]['features']
+            file_data["avg_feature"] = _list[i]['avg_feature'][0].tolist()
+            with open('./log.json', 'w', encoding="utf-8") as make_file: 
+                json.dump(file_data, make_file, ensure_ascii=False, indent='\t')
+        
+
     def process(self, frames, all_detections, masks=None):
         assert len(frames) == len(all_detections) == len(self.scts)
         all_tracks = []
@@ -35,15 +62,22 @@ class MultiCameraTracker:
             sct.process(frames[i], all_detections[i], mask)
 
             """
-            print("*******************************************")
-            print("get_tracks: ", sct.get_tracks())
-            
-            while(True): a = 1
-            """
-            """
             sct.get_tracks() : 하면 tuple 형식으로 id 와 좌표, 피쳐값 저장됨.
             """
+            
             all_tracks += sct.get_tracks()
+
+            """       
+            print("*******************************")
+            print(type(all_tracks))
+            """
+            """
+            f = open("./log.txt", 'w')
+            f.write(str(all_tracks))
+            #while(True): a = 1
+            """
+        # for make json file
+        return all_tracks
             
 
         if self.time > 0 and self.time % self.time_window == 0:
@@ -108,10 +142,8 @@ class MultiCameraTracker:
         self.global_ids_queue.put(id)
 
     def get_tracked_objects(self):
+        
         objs = [sct.get_tracked_objects() for sct in self.scts]
-        """print("********************************************")
-        print("mct_objs: ")
-        print(objs)"""
         return objs
 
     def get_all_tracks_history(self):
