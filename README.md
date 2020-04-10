@@ -71,3 +71,4 @@ To save output video with the result please use the option  `--output_video`, to
 
 Also demo can dump resulting tracks to a json file. To specify the file use the `--history_file` argument.
 
+# WCLI
