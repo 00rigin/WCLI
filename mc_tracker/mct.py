@@ -10,6 +10,8 @@ from .sct import SingleCameraTracker, clusters_distance, THE_BIGGEST_DISTANCE
 import json
 from collections import OrderedDict
 import codecs
+#추가함
+from encoder import NumpyEncoder
 
 
 
@@ -30,26 +32,26 @@ class MultiCameraTracker:
                                                  self._release_global_id,
                                                  reid_model, **sct_config))
 
-    def make_file(self, _list):
+    def make_file(self, tracks):
         file_data = OrderedDict()
-        #file_data = _list
+        #file_data = tracks
         #print(json.dumps(file_data, ensure_ascii=False, indent="\t"))
-        #print(type(_list[0]['features'][0]))
+        #print(type(tracks[0]['features'][0]))
         
-        for i in range(len(_list)):
-            _temp = []
-            file_data["id"] = _list[i]['id']
-            file_data["cam_id"] = _list[i]['cam_id']
-            file_data["f_cluster"] = "<mc_tracker.sct.ClusterFeature object at 0x7f0ed18d7a58>"
-            for j in range(len(_list[i]['features'])):
-                _temp.append(_list[i]['features'][j].tolist())
-            #_temp = [_list[i]['features'][x] for x in range(len(_list[i]['features']))].tolist()
-            #_temp = _list[i]['features'][0].tolist()
-            file_data["features"] = _temp#_list[i]['features']
-            file_data["avg_feature"] = _list[i]['avg_feature'][0].tolist()
+        for track in tracks:
+    
+            #file_data['id'] = track['id']
+            file_data['id'] = "target"
+            file_data['cam_id'] = track['cam_id']
+            file_data['avg_feature'] = track['avg_feature'].tolist()
+            file_data['f_cluster'] = str(track['f_cluster'])
+            file_data['features'] = []
+            for obj in (track['features']):
+                file_data['features'].append(obj.tolist())    
+            
             with open('./log.json', 'w', encoding="utf-8") as make_file: 
                 json.dump(file_data, make_file, ensure_ascii=False, indent='\t')
-        
+
 
     def process(self, frames, all_detections, masks=None):
         assert len(frames) == len(all_detections) == len(self.scts)
@@ -66,6 +68,7 @@ class MultiCameraTracker:
             """
             
             all_tracks += sct.get_tracks()
+            
 
             """       
             print("*******************************")
@@ -77,6 +80,7 @@ class MultiCameraTracker:
             #while(True): a = 1
             """
         # for make json file
+        print(all_tracks)
         return all_tracks
             
 

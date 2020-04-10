@@ -9,11 +9,14 @@ import sys
 
 import cv2 as cv
 
+
+
 from utils.network_wrappers import Detector, VectorCNN
 from mc_tracker.mct import MultiCameraTracker
 from utils.misc import read_py_config
 from utils.video import MulticamCapture
 from utils.visualization import visualize_multicam_detections
+
 
 from openvino.inference_engine import IECore # pylint: disable=import-error,E0611
 
@@ -90,12 +93,15 @@ def run(params, capture, detector, reid): #params : args 임
         #tracker.process(frames, all_detections, all_masks)
         feature_data = tracker.process(frames, all_detections, all_masks)
         tracker.make_file(feature_data)
+        
+        #with open("./log.json", 'w') as f:
+        #    json.dump(dumped, f)
         tracked_objects = tracker.get_tracked_objects()
 
-        """
+        
         print("###################################")
         print(tracked_objects)
-        """
+        
         ####################################################
         # ID 0 번만 찾게 만들기 (가상)
         """
