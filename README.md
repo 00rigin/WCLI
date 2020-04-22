@@ -46,19 +46,11 @@ source setupvars.sh
 # videos
 python3 multi_camera_multi_person_tracking.py \
     -i video4.mp4\
-    --m_detector model/person-detection-retail-0013/FP32/person-detection-retail-0013.xml \
-    --m_reid model/person-reidentification-retail-0103/FP32/person-reidentification-retail-0103.xml \
--d MYRIAD \
-    --config config.py
 ```
 ```
 # webcam
 python3 multi_camera_multi_person_tracking.py \
     -i 0 1\
-    --m_detector moodel/person-detection-retail-0013/FP32/person-detection-retail-0013.xml \
-    --m_reid model/person-reidentification-retail-0103/FP32/person-reidentification-retail-0103.xml \
--d MYRIAD \
---config config.py
 ```
 
 ### 피쳐값 위치
