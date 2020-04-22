@@ -69,7 +69,7 @@ class MultiCameraTracker:
             
             all_tracks += sct.get_tracks()
             
-
+            
             """       
             print("*******************************")
             print(type(all_tracks))
@@ -80,9 +80,11 @@ class MultiCameraTracker:
             #while(True): a = 1
             """
         # for make json file
+        """
         print(all_tracks)
+        """
         return all_tracks
-            
+        
 
         if self.time > 0 and self.time % self.time_window == 0:
             distance_matrix = self._compute_mct_distance_matrix(all_tracks)

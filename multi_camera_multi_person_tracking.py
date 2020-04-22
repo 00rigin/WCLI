@@ -43,7 +43,7 @@ class FramesThreadBody:
 
 
 def run(params, capture, detector, reid): #params : args 임
-    win_name = 'Multi camera tracking'
+    win_name = 'TEAM_KOTLIN'
     config = {}
 
     if len(params.config):
@@ -92,15 +92,15 @@ def run(params, capture, detector, reid): #params : args 임
         # 원본
         #tracker.process(frames, all_detections, all_masks)
         feature_data = tracker.process(frames, all_detections, all_masks)
-        tracker.make_file(feature_data)
+        #tracker.make_file(feature_data)
         
         #with open("./log.json", 'w') as f:
         #    json.dump(dumped, f)
         tracked_objects = tracker.get_tracked_objects()
 
         
-        print("###################################")
-        print(tracked_objects)
+        #print("###################################")
+        #print(tracked_objects)
         
         ####################################################
         # ID 0 번만 찾게 만들기 (가상)
@@ -140,19 +140,21 @@ def main():
     parser.add_argument('-i', type=str, nargs='+', help='Input sources (indexes \
                         of cameras or paths to video files)', required=True)
 
-    parser.add_argument('-m', '--m_detector', type=str, required=True,
-                        help='Path to the person detection model')
+    #parser.add_argument('-m', '--m_detector', type=str, required=True,  help='Path to the person detection model')
+    parser.add_argument('-m', '--m_detector', type=str, default='model/person-detection-retail-0013/FP16/person-detection-retail-0013.xml')
     parser.add_argument('--t_detector', type=float, default=0.6,
                         help='Threshold for the person detection model')
 
-    parser.add_argument('--m_reid', type=str, required=True,
-                        help='Path to the person reidentification model')
+    #parser.add_argument('--m_reid', type=str, required=True, help='Path to the person reidentification model')
+    parser.add_argument('--m_reid', type=str, default='model/person-reidentification-retail-0103/FP16/person-reidentification-retail-0103.xml')
 
     parser.add_argument('--output_video', type=str, default='', required=False)
-    parser.add_argument('--config', type=str, default='', required=False)
+    #parser.add_argument('--config', type=str, default='', required=False)
+    parser.add_argument('--config', type=str, default='config.py', required=False)
     parser.add_argument('--history_file', type=str, default='', required=False)
 
-    parser.add_argument('-d', '--device', type=str, default='CPU')
+#   parser.add_argument('-d', '--device', type=str, default='CPU')
+    parser.add_argument('-d', '--device', type=str, default='MYRIAD')
     parser.add_argument('-l', '--cpu_extension',
                         help='MKLDNN (CPU)-targeted custom layers.Absolute \
                               path to a shared library with the kernels impl.',
