@@ -94,8 +94,6 @@ def run(params, capture, detector, reid): #params : args 임
         feature_data = tracker.process(frames, all_detections, all_masks)
         #tracker.make_file(feature_data)
         
-        #with open("./log.json", 'w') as f:
-        #    json.dump(dumped, f)
         tracked_objects = tracker.get_tracked_objects()
 
         
@@ -146,15 +144,15 @@ def main():
                         help='Threshold for the person detection model')
 
     #parser.add_argument('--m_reid', type=str, required=True, help='Path to the person reidentification model')
-    parser.add_argument('--m_reid', type=str, default='model/person-reidentification-retail-0103/FP16/person-reidentification-retail-0103.xml')
+    parser.add_argument('--m_reid', type=str, default='model/person-reidentification-retail-0031.xml')
 
     parser.add_argument('--output_video', type=str, default='', required=False)
     #parser.add_argument('--config', type=str, default='', required=False)
     parser.add_argument('--config', type=str, default='config.py', required=False)
     parser.add_argument('--history_file', type=str, default='', required=False)
 
-#   parser.add_argument('-d', '--device', type=str, default='CPU')
-    parser.add_argument('-d', '--device', type=str, default='MYRIAD')
+    parser.add_argument('-d', '--device', type=str, default='CPU')
+    #parser.add_argument('-d', '--device', type=str, default='MYRIAD')
     parser.add_argument('-l', '--cpu_extension',
                         help='MKLDNN (CPU)-targeted custom layers.Absolute \
                               path to a shared library with the kernels impl.',

@@ -85,7 +85,9 @@ def load_ie_model(ie, model_xml, device, plugin_dir, cpu_extension='', num_reqs=
     assert len(net.inputs.keys()) == 1 or len(net.inputs.keys()) == 2, \
         "Supports topologies with only 1 or 2 inputs"
     assert len(net.outputs) == 1 or len(net.outputs) == 5, \
-        "Supports topologies with only 1 or 5 outputs"
+    log.info("Loading network files:\n\t%s\n\t%s", model_xml, model_bin)
+    net = IENetwork(model=model_xml, weights=model_bin)
+
 
     log.info("Preparing input blobs")
     input_blob = next(iter(net.inputs))
@@ -97,3 +99,94 @@ def load_ie_model(ie, model_xml, device, plugin_dir, cpu_extension='', num_reqs=
     exec_net = ie.load_network(network=net, device_name=device, num_requests=num_reqs)
     model = IEModel(exec_net, net.inputs, input_blob, out_blob)
     return model
+
+
+#######################################추가됨############################
+"""
+class NcsClassifier(object):
+    def __init__(self, id, queue, model_xml):
+        self._id = id
+        self.current_request_id = 0
+        self.next_request_id = 1
+        self._queue = queue
+        self._load_model(model_xml)
+
+    def _load_model(self, model_xml):
+        model_bin = os.path.splitext(model_xml)[0] + ".bin"
+
+        # Plugin initialization for specified device and load extensions library if specified
+        self.plugin = IEPlugin(device='MYRIAD')
+        #self.plugin.set_config({"VPU_FORCE_RESET":"NO"})
+        # Read IR
+        log.info("Loading network files:\n\t{}\n\t{}".format(model_xml, model_bin))
+        self.net = IENetwork.from_ir(model=model_xml, weights=model_bin)
+        self.exec_net = self.plugin.load(network=self.net, num_requests=2)
+
+    def predict(self, image):
+        input_blob = next(iter(self.net.inputs))
+        out_blob = next(iter(self.net.outputs))
+
+        # do inference
+        res = self.exec_net.infer(inputs={input_blob: image})
+
+        # get result back
+        output = res[out_blob]
+
+        probs = np.squeeze(output[0])
+        top_ind = np.argsort(probs)[-1:][::-1]
+        return top_ind
+
+    def predict_async(self, image):
+        input_blob = next(iter(self.net.inputs))
+        out_blob = next(iter(self.net.outputs))
+
+        self.exec_net.start_async(request_id=self.next_request_id,
+                                  inputs={input_blob: image})
+
+        if self.exec_net.requests[self.current_request_id].wait(-1) == 0:
+            res = self.exec_net.requests[self.current_request_id].outputs[out_blob]
+            probs = np.squeeze(res)
+            top_ind = np.argsort(probs)[-1:][::-1]
+            print("Woker id {}, predicted index {}".format(self._id, top_ind))
+
+        # exchange request id
+        self.current_request_id, self.next_request_id = self.next_request_id, self.current_request_id
+
+
+class Scheduler:
+    def __init__(self, deviceids, model_xml):
+        self._queue = queue.Queue()
+        self._ids = deviceids
+        self.__init_workers(model_xml)
+
+    def __init_workers(self, model_xml):
+        self._workers = list()
+        for _id in self._ids:
+            self._workers.append(NcsClassifier(_id, self._queue, model_xml))
+
+    def start(self, xfilelst, input_shape):
+
+        start_time = time()
+        # start the workers
+        threads = []
+
+        n, c, h, w = input_shape
+
+        # add producer thread for image pre-processing
+        producer_thread = threading.Thread(target=image_preprocess_job, args=(self._queue, xfilelst, w, h))
+        producer_thread.start()
+        threads.append(producer_thread)
+
+        # schedule workers
+        for worker in self._workers:
+            thworker = threading.Thread(target=inference_job_async, args=(self._queue, worker))
+            thworker.start()
+            threads.append(thworker)
+
+        # wait all fo workers finish
+        for _thread in threads:
+            _thread.join()
+
+        end_time = time()
+        print("all of workers have been done within ", end_time - start_time)
+"""

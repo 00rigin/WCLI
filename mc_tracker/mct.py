@@ -31,6 +31,7 @@ class MultiCameraTracker:
             self.scts.append(SingleCameraTracker(i, self._get_next_global_id,
                                                  self._release_global_id,
                                                  reid_model, **sct_config))
+        self._count_ = 0
 
     def make_file(self, tracks):
         file_data = OrderedDict()
@@ -83,12 +84,16 @@ class MultiCameraTracker:
         """
         print(all_tracks)
         """
-        return all_tracks
+        
         
 
         if self.time > 0 and self.time % self.time_window == 0:
             distance_matrix = self._compute_mct_distance_matrix(all_tracks)
             assignment = self._compute_greedy_assignment(distance_matrix)
+
+            print(assignment)
+
+            
 
             for i, idx in enumerate(assignment):
                 if idx is not None and all_tracks[idx]['id'] is not None and all_tracks[i]['timestamps'] is not None:
@@ -100,11 +105,20 @@ class MultiCameraTracker:
                             self.scts[all_tracks[i]['cam_id']].check_and_merge(all_tracks[idx], all_tracks[i])
 
         self.time += 1
+        # 리턴 추가해줌
+        return all_tracks
 
+    # 피쳐값 비교하는 부분
     def _compute_mct_distance_matrix(self, all_tracks):
         distance_matrix = THE_BIGGEST_DISTANCE * np.eye(len(all_tracks), dtype=np.float32)
         for i, track1 in enumerate(all_tracks):
             for j, track2 in enumerate(all_tracks):
+                #if(self._count_ == 5):
+                    #print(track1['avg_feature'])
+                    #print("------------------------------")
+                    #print(track2['avg_feature'])
+                #self._count_+=1
+
                 if j >= i:
                     break
                 if track1['id'] != track2['id'] and track1['cam_id'] != track2['cam_id'] and \
@@ -115,6 +129,7 @@ class MultiCameraTracker:
                     distance_matrix[i, j] = min(clust_dist, avg_dist)
                 else:
                     distance_matrix[i, j] = 10
+        
         return distance_matrix + np.transpose(distance_matrix)
 
     def _compute_greedy_assignment(self, distance_matrix):
