@@ -91,7 +91,7 @@ class MultiCameraTracker:
             distance_matrix = self._compute_mct_distance_matrix(all_tracks)
             assignment = self._compute_greedy_assignment(distance_matrix)
 
-            print(assignment)
+            #print(assignment)
 
             
 

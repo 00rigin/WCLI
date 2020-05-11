@@ -6,7 +6,7 @@ from threading import Thread
 import json
 import logging as log
 import sys
-
+import numpy as np
 import cv2 as cv
 
 
@@ -16,6 +16,7 @@ from mc_tracker.mct import MultiCameraTracker
 from utils.misc import read_py_config
 from utils.video import MulticamCapture
 from utils.visualization import visualize_multicam_detections
+from comm.jottable import JotTable
 
 
 from openvino.inference_engine import IECore # pylint: disable=import-error,E0611
@@ -42,7 +43,7 @@ class FramesThreadBody:
                 self.frames_queue.put(frames)
 
 
-def run(params, capture, detector, reid): #params : args 임
+def run(params, capture, detector, reid, jot): #params : args 임
     win_name = 'TEAM_KOTLIN'
     config = {}
 
@@ -113,6 +114,13 @@ def run(params, capture, detector, reid): #params : args 임
                     _len = len(tracked_objects[i])
                     """
         #########################################################
+
+        
+        t_frames = np.array(frames)
+        #print(type(t_frames))
+        #20200511 추가
+
+        jot.check_jot(tracked_objects, t_frames)
     
         fps = round(1 / (time.time() - start), 1)
         vis = visualize_multicam_detections(frames, tracked_objects, fps)
@@ -179,8 +187,15 @@ def main():
         person_recognizer = VectorCNN(ie, args.m_reid, args.device)
     else:
         person_recognizer = None
-    run(args, capture, person_detector, person_recognizer)
+
+    # 20200511 추가
+    jot = JotTable()
+
+    run(args, capture, person_detector, person_recognizer, jot)
     log.info('Demo finished successfully')
+
+    
+    
 
 
 if __name__ == '__main__':

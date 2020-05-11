@@ -24,7 +24,7 @@ from utils.misc import none_to_zero
 
 THE_BIGGEST_DISTANCE = 10.
 
-TrackedObj = namedtuple('TrackedObj', 'rect label')
+TrackedObj = namedtuple('TrackedObj', 'rect label') #20200511 변경함
 
 
 class ClusterFeature:
