@@ -116,11 +116,13 @@ def run(params, capture, detector, reid, jot): #params : args 임
         #########################################################
 
         
-        t_frames = np.array(frames)
+        #t_frames = np.array(frames)
         #print(type(t_frames))
         #20200511 추가
 
-        jot.check_jot(tracked_objects, t_frames)
+        #jot.check_jot(tracked_objects, t_frames)
+        jot.check_jot(tracked_objects, frames)
+
     
         fps = round(1 / (time.time() - start), 1)
         vis = visualize_multicam_detections(frames, tracked_objects, fps)

@@ -33,7 +33,7 @@ def visualize_multicam_detections(frames, all_objects, fps=''):
             vis = np.vstack([vis, frame])
         else:
             vis = frame
-
+    
     n_cams = len(frames)
     vis = cv.resize(vis, (vis.shape[1] // n_cams, vis.shape[0] // n_cams))
 
