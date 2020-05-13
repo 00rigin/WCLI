@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <net batch="1" name="ICV-RMNet-PD-ReID-Light" version="5">
 	<layers>
-		<layer id="0" name="data" precision="FP16" type="Input">
+		<layer id="0" name="data" precision="FP32" type="Input">
 			<output>
 				<port id="0">
 					<dim>1</dim>
@@ -11,7 +11,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="1" name="data/norm/scale/Mul_/FusedScaleShift_" precision="FP16" type="ScaleShift">
+		<layer id="1" name="data/norm/scale/Mul_/FusedScaleShift_" precision="FP32" type="ScaleShift">
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -29,11 +29,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="0" size="6"/>
-				<biases offset="6" size="6"/>
+				<weights offset="0" size="12"/>
+				<biases offset="12" size="12"/>
 			</blobs>
 		</layer>
-		<layer id="2" name="init_block1/dim_inc/conv" precision="FP16" type="Convolution">
+		<layer id="2" name="init_block1/dim_inc/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="3,3" output="32" pads_begin="1,1" pads_end="1,1" strides="2,2"/>
 			<input>
 				<port id="0">
@@ -52,11 +52,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="12" size="1728"/>
-				<biases offset="1740" size="64"/>
+				<weights offset="24" size="3456"/>
+				<biases offset="3480" size="128"/>
 			</blobs>
 		</layer>
-		<layer id="3" name="init_block1/dim_inc/fn" precision="FP16" type="ReLU">
+		<layer id="3" name="init_block1/dim_inc/fn" precision="FP32" type="ReLU">
 			<data negative_slope="0.0"/>
 			<input>
 				<port id="0">
@@ -75,7 +75,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="4" name="bottleneck1_1/dim_red/conv" precision="FP16" type="Convolution">
+		<layer id="4" name="bottleneck1_1/dim_red/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="8" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -94,11 +94,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="1804" size="512"/>
-				<biases offset="2316" size="16"/>
+				<weights offset="3608" size="1024"/>
+				<biases offset="4632" size="32"/>
 			</blobs>
 		</layer>
-		<layer id="5" name="bottleneck1_1/dim_red/fn" precision="FP16" type="Activation">
+		<layer id="5" name="bottleneck1_1/dim_red/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -117,7 +117,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="6" name="bottleneck1_1/inner/dw1/conv" precision="FP16" type="Convolution">
+		<layer id="6" name="bottleneck1_1/inner/dw1/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="8" kernel="3,3" output="8" pads_begin="1,1" pads_end="1,1" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -136,11 +136,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="2332" size="144"/>
-				<biases offset="2476" size="16"/>
+				<weights offset="4664" size="288"/>
+				<biases offset="4952" size="32"/>
 			</blobs>
 		</layer>
-		<layer id="7" name="bottleneck1_1/inner/dw1/fn" precision="FP16" type="Activation">
+		<layer id="7" name="bottleneck1_1/inner/dw1/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -159,7 +159,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="8" name="bottleneck1_1/dim_inc/conv" precision="FP16" type="Convolution">
+		<layer id="8" name="bottleneck1_1/dim_inc/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="32" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -178,11 +178,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="2492" size="512"/>
-				<biases offset="3004" size="64"/>
+				<weights offset="4984" size="1024"/>
+				<biases offset="6008" size="128"/>
 			</blobs>
 		</layer>
-		<layer id="9" name="bottleneck1_1/add" precision="FP16" type="Eltwise">
+		<layer id="9" name="bottleneck1_1/add" precision="FP32" type="Eltwise">
 			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
@@ -207,7 +207,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="10" name="bottleneck1_1/fn" precision="FP16" type="Activation">
+		<layer id="10" name="bottleneck1_1/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -226,7 +226,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="11" name="bottleneck1_2/dim_red/conv" precision="FP16" type="Convolution">
+		<layer id="11" name="bottleneck1_2/dim_red/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="8" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -245,11 +245,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="3068" size="512"/>
-				<biases offset="3580" size="16"/>
+				<weights offset="6136" size="1024"/>
+				<biases offset="7160" size="32"/>
 			</blobs>
 		</layer>
-		<layer id="12" name="bottleneck1_2/dim_red/fn" precision="FP16" type="Activation">
+		<layer id="12" name="bottleneck1_2/dim_red/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -268,7 +268,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="13" name="bottleneck1_2/inner/dw1/conv" precision="FP16" type="Convolution">
+		<layer id="13" name="bottleneck1_2/inner/dw1/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="8" kernel="3,3" output="8" pads_begin="1,1" pads_end="1,1" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -287,11 +287,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="3596" size="144"/>
-				<biases offset="3740" size="16"/>
+				<weights offset="7192" size="288"/>
+				<biases offset="7480" size="32"/>
 			</blobs>
 		</layer>
-		<layer id="14" name="bottleneck1_2/inner/dw1/fn" precision="FP16" type="Activation">
+		<layer id="14" name="bottleneck1_2/inner/dw1/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -310,7 +310,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="15" name="bottleneck1_2/dim_inc/conv" precision="FP16" type="Convolution">
+		<layer id="15" name="bottleneck1_2/dim_inc/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="32" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -329,11 +329,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="3756" size="512"/>
-				<biases offset="4268" size="64"/>
+				<weights offset="7512" size="1024"/>
+				<biases offset="8536" size="128"/>
 			</blobs>
 		</layer>
-		<layer id="16" name="bottleneck1_2/add" precision="FP16" type="Eltwise">
+		<layer id="16" name="bottleneck1_2/add" precision="FP32" type="Eltwise">
 			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
@@ -358,7 +358,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="17" name="bottleneck1_2/fn" precision="FP16" type="Activation">
+		<layer id="17" name="bottleneck1_2/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -377,7 +377,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="18" name="bottleneck1_3/dim_red/conv" precision="FP16" type="Convolution">
+		<layer id="18" name="bottleneck1_3/dim_red/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="8" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -396,11 +396,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="4332" size="512"/>
-				<biases offset="4844" size="16"/>
+				<weights offset="8664" size="1024"/>
+				<biases offset="9688" size="32"/>
 			</blobs>
 		</layer>
-		<layer id="19" name="bottleneck1_3/dim_red/fn" precision="FP16" type="Activation">
+		<layer id="19" name="bottleneck1_3/dim_red/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -419,7 +419,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="20" name="bottleneck1_3/inner/dw1/conv" precision="FP16" type="Convolution">
+		<layer id="20" name="bottleneck1_3/inner/dw1/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="8" kernel="3,3" output="8" pads_begin="1,1" pads_end="1,1" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -438,11 +438,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="4860" size="144"/>
-				<biases offset="5004" size="16"/>
+				<weights offset="9720" size="288"/>
+				<biases offset="10008" size="32"/>
 			</blobs>
 		</layer>
-		<layer id="21" name="bottleneck1_3/inner/dw1/fn" precision="FP16" type="Activation">
+		<layer id="21" name="bottleneck1_3/inner/dw1/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -461,7 +461,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="22" name="bottleneck1_3/dim_inc/conv" precision="FP16" type="Convolution">
+		<layer id="22" name="bottleneck1_3/dim_inc/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="32" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -480,11 +480,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="5020" size="512"/>
-				<biases offset="5532" size="64"/>
+				<weights offset="10040" size="1024"/>
+				<biases offset="11064" size="128"/>
 			</blobs>
 		</layer>
-		<layer id="23" name="bottleneck1_3/add" precision="FP16" type="Eltwise">
+		<layer id="23" name="bottleneck1_3/add" precision="FP32" type="Eltwise">
 			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
@@ -509,7 +509,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="24" name="bottleneck1_3/fn" precision="FP16" type="Activation">
+		<layer id="24" name="bottleneck1_3/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -528,7 +528,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="25" name="bottleneck2_0/skip/pooling" precision="FP16" type="Pooling">
+		<layer id="25" name="bottleneck2_0/skip/pooling" precision="FP32" type="Pooling">
 			<data exclude-pad="true" kernel="2,2" pads_begin="0,0" pads_end="0,0" pool-method="max" rounding_type="ceil" strides="2,2"/>
 			<input>
 				<port id="0">
@@ -547,7 +547,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="26" name="bottleneck2_0/skip/conv" precision="FP16" type="Convolution">
+		<layer id="26" name="bottleneck2_0/skip/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="64" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -566,11 +566,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="5596" size="4096"/>
-				<biases offset="9692" size="128"/>
+				<weights offset="11192" size="8192"/>
+				<biases offset="19384" size="256"/>
 			</blobs>
 		</layer>
-		<layer id="27" name="bottleneck2_0/dim_red/conv" precision="FP16" type="Convolution">
+		<layer id="27" name="bottleneck2_0/dim_red/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="16" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -589,11 +589,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="9820" size="1024"/>
-				<biases offset="10844" size="32"/>
+				<weights offset="19640" size="2048"/>
+				<biases offset="21688" size="64"/>
 			</blobs>
 		</layer>
-		<layer id="28" name="bottleneck2_0/dim_red/fn" precision="FP16" type="Activation">
+		<layer id="28" name="bottleneck2_0/dim_red/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -612,7 +612,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="29" name="bottleneck2_0/inner/dw1/conv" precision="FP16" type="Convolution">
+		<layer id="29" name="bottleneck2_0/inner/dw1/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="16" kernel="3,3" output="16" pads_begin="1,1" pads_end="1,1" strides="2,2"/>
 			<input>
 				<port id="0">
@@ -631,11 +631,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="10876" size="288"/>
-				<biases offset="11164" size="32"/>
+				<weights offset="21752" size="576"/>
+				<biases offset="22328" size="64"/>
 			</blobs>
 		</layer>
-		<layer id="30" name="bottleneck2_0/inner/dw1/fn" precision="FP16" type="Activation">
+		<layer id="30" name="bottleneck2_0/inner/dw1/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -654,7 +654,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="31" name="bottleneck2_0/dim_inc/conv" precision="FP16" type="Convolution">
+		<layer id="31" name="bottleneck2_0/dim_inc/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="64" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -673,11 +673,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="11196" size="2048"/>
-				<biases offset="13244" size="128"/>
+				<weights offset="22392" size="4096"/>
+				<biases offset="26488" size="256"/>
 			</blobs>
 		</layer>
-		<layer id="32" name="bottleneck2_0/add" precision="FP16" type="Eltwise">
+		<layer id="32" name="bottleneck2_0/add" precision="FP32" type="Eltwise">
 			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
@@ -702,7 +702,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="33" name="bottleneck2_0/fn" precision="FP16" type="Activation">
+		<layer id="33" name="bottleneck2_0/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -721,7 +721,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="34" name="bottleneck2_1/dim_red/conv" precision="FP16" type="Convolution">
+		<layer id="34" name="bottleneck2_1/dim_red/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="16" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -740,11 +740,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="13372" size="2048"/>
-				<biases offset="15420" size="32"/>
+				<weights offset="26744" size="4096"/>
+				<biases offset="30840" size="64"/>
 			</blobs>
 		</layer>
-		<layer id="35" name="bottleneck2_1/dim_red/fn" precision="FP16" type="Activation">
+		<layer id="35" name="bottleneck2_1/dim_red/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -763,7 +763,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="36" name="bottleneck2_1/inner/dw1/conv" precision="FP16" type="Convolution">
+		<layer id="36" name="bottleneck2_1/inner/dw1/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="16" kernel="3,3" output="16" pads_begin="1,1" pads_end="1,1" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -782,11 +782,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="15452" size="288"/>
-				<biases offset="15740" size="32"/>
+				<weights offset="30904" size="576"/>
+				<biases offset="31480" size="64"/>
 			</blobs>
 		</layer>
-		<layer id="37" name="bottleneck2_1/inner/dw1/fn" precision="FP16" type="Activation">
+		<layer id="37" name="bottleneck2_1/inner/dw1/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -805,7 +805,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="38" name="bottleneck2_1/dim_inc/conv" precision="FP16" type="Convolution">
+		<layer id="38" name="bottleneck2_1/dim_inc/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="64" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -824,11 +824,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="15772" size="2048"/>
-				<biases offset="17820" size="128"/>
+				<weights offset="31544" size="4096"/>
+				<biases offset="35640" size="256"/>
 			</blobs>
 		</layer>
-		<layer id="39" name="bottleneck2_1/add" precision="FP16" type="Eltwise">
+		<layer id="39" name="bottleneck2_1/add" precision="FP32" type="Eltwise">
 			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
@@ -853,7 +853,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="40" name="bottleneck2_1/fn" precision="FP16" type="Activation">
+		<layer id="40" name="bottleneck2_1/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -872,7 +872,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="41" name="bottleneck2_2/dim_red/conv" precision="FP16" type="Convolution">
+		<layer id="41" name="bottleneck2_2/dim_red/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="16" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -891,11 +891,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="17948" size="2048"/>
-				<biases offset="19996" size="32"/>
+				<weights offset="35896" size="4096"/>
+				<biases offset="39992" size="64"/>
 			</blobs>
 		</layer>
-		<layer id="42" name="bottleneck2_2/dim_red/fn" precision="FP16" type="Activation">
+		<layer id="42" name="bottleneck2_2/dim_red/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -914,7 +914,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="43" name="bottleneck2_2/inner/dw1/conv" precision="FP16" type="Convolution">
+		<layer id="43" name="bottleneck2_2/inner/dw1/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="16" kernel="3,3" output="16" pads_begin="1,1" pads_end="1,1" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -933,11 +933,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="20028" size="288"/>
-				<biases offset="20316" size="32"/>
+				<weights offset="40056" size="576"/>
+				<biases offset="40632" size="64"/>
 			</blobs>
 		</layer>
-		<layer id="44" name="bottleneck2_2/inner/dw1/fn" precision="FP16" type="Activation">
+		<layer id="44" name="bottleneck2_2/inner/dw1/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -956,7 +956,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="45" name="bottleneck2_2/dim_inc/conv" precision="FP16" type="Convolution">
+		<layer id="45" name="bottleneck2_2/dim_inc/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="64" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -975,11 +975,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="20348" size="2048"/>
-				<biases offset="22396" size="128"/>
+				<weights offset="40696" size="4096"/>
+				<biases offset="44792" size="256"/>
 			</blobs>
 		</layer>
-		<layer id="46" name="bottleneck2_2/add" precision="FP16" type="Eltwise">
+		<layer id="46" name="bottleneck2_2/add" precision="FP32" type="Eltwise">
 			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
@@ -1004,7 +1004,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="47" name="bottleneck2_2/fn" precision="FP16" type="Activation">
+		<layer id="47" name="bottleneck2_2/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -1023,7 +1023,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="48" name="bottleneck2_3/dim_red/conv" precision="FP16" type="Convolution">
+		<layer id="48" name="bottleneck2_3/dim_red/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="16" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -1042,11 +1042,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="22524" size="2048"/>
-				<biases offset="24572" size="32"/>
+				<weights offset="45048" size="4096"/>
+				<biases offset="49144" size="64"/>
 			</blobs>
 		</layer>
-		<layer id="49" name="bottleneck2_3/dim_red/fn" precision="FP16" type="Activation">
+		<layer id="49" name="bottleneck2_3/dim_red/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -1065,7 +1065,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="50" name="bottleneck2_3/inner/dw1/conv" precision="FP16" type="Convolution">
+		<layer id="50" name="bottleneck2_3/inner/dw1/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="16" kernel="3,3" output="16" pads_begin="1,1" pads_end="1,1" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -1084,11 +1084,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="24604" size="288"/>
-				<biases offset="24892" size="32"/>
+				<weights offset="49208" size="576"/>
+				<biases offset="49784" size="64"/>
 			</blobs>
 		</layer>
-		<layer id="51" name="bottleneck2_3/inner/dw1/fn" precision="FP16" type="Activation">
+		<layer id="51" name="bottleneck2_3/inner/dw1/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -1107,7 +1107,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="52" name="bottleneck2_3/dim_inc/conv" precision="FP16" type="Convolution">
+		<layer id="52" name="bottleneck2_3/dim_inc/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="64" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -1126,11 +1126,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="24924" size="2048"/>
-				<biases offset="26972" size="128"/>
+				<weights offset="49848" size="4096"/>
+				<biases offset="53944" size="256"/>
 			</blobs>
 		</layer>
-		<layer id="53" name="bottleneck2_3/add" precision="FP16" type="Eltwise">
+		<layer id="53" name="bottleneck2_3/add" precision="FP32" type="Eltwise">
 			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
@@ -1155,7 +1155,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="54" name="bottleneck2_3/fn" precision="FP16" type="Activation">
+		<layer id="54" name="bottleneck2_3/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -1174,7 +1174,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="55" name="bottleneck3_0/skip/pooling" precision="FP16" type="Pooling">
+		<layer id="55" name="bottleneck3_0/skip/pooling" precision="FP32" type="Pooling">
 			<data exclude-pad="true" kernel="2,2" pads_begin="0,0" pads_end="0,0" pool-method="max" rounding_type="ceil" strides="2,2"/>
 			<input>
 				<port id="0">
@@ -1193,7 +1193,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="56" name="bottleneck3_0/skip/conv" precision="FP16" type="Convolution">
+		<layer id="56" name="bottleneck3_0/skip/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="128" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -1212,11 +1212,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="27100" size="16384"/>
-				<biases offset="43484" size="256"/>
+				<weights offset="54200" size="32768"/>
+				<biases offset="86968" size="512"/>
 			</blobs>
 		</layer>
-		<layer id="57" name="bottleneck3_0/dim_red/conv" precision="FP16" type="Convolution">
+		<layer id="57" name="bottleneck3_0/dim_red/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="32" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -1235,11 +1235,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="43740" size="4096"/>
-				<biases offset="47836" size="64"/>
+				<weights offset="87480" size="8192"/>
+				<biases offset="95672" size="128"/>
 			</blobs>
 		</layer>
-		<layer id="58" name="bottleneck3_0/dim_red/fn" precision="FP16" type="Activation">
+		<layer id="58" name="bottleneck3_0/dim_red/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -1258,7 +1258,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="59" name="bottleneck3_0/inner/dw1/conv" precision="FP16" type="Convolution">
+		<layer id="59" name="bottleneck3_0/inner/dw1/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="32" kernel="3,3" output="32" pads_begin="1,1" pads_end="1,1" strides="2,2"/>
 			<input>
 				<port id="0">
@@ -1277,11 +1277,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="47900" size="576"/>
-				<biases offset="48476" size="64"/>
+				<weights offset="95800" size="1152"/>
+				<biases offset="96952" size="128"/>
 			</blobs>
 		</layer>
-		<layer id="60" name="bottleneck3_0/inner/dw1/fn" precision="FP16" type="Activation">
+		<layer id="60" name="bottleneck3_0/inner/dw1/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -1300,7 +1300,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="61" name="bottleneck3_0/dim_inc/conv" precision="FP16" type="Convolution">
+		<layer id="61" name="bottleneck3_0/dim_inc/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="128" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -1319,11 +1319,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="48540" size="8192"/>
-				<biases offset="56732" size="256"/>
+				<weights offset="97080" size="16384"/>
+				<biases offset="113464" size="512"/>
 			</blobs>
 		</layer>
-		<layer id="62" name="bottleneck3_0/add" precision="FP16" type="Eltwise">
+		<layer id="62" name="bottleneck3_0/add" precision="FP32" type="Eltwise">
 			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
@@ -1348,7 +1348,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="63" name="bottleneck3_0/fn" precision="FP16" type="Activation">
+		<layer id="63" name="bottleneck3_0/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -1367,7 +1367,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="64" name="bottleneck3_1/dim_red/conv" precision="FP16" type="Convolution">
+		<layer id="64" name="bottleneck3_1/dim_red/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="32" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -1386,11 +1386,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="56988" size="8192"/>
-				<biases offset="65180" size="64"/>
+				<weights offset="113976" size="16384"/>
+				<biases offset="130360" size="128"/>
 			</blobs>
 		</layer>
-		<layer id="65" name="bottleneck3_1/dim_red/fn" precision="FP16" type="Activation">
+		<layer id="65" name="bottleneck3_1/dim_red/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -1409,7 +1409,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="66" name="bottleneck3_1/inner/dw1/conv" precision="FP16" type="Convolution">
+		<layer id="66" name="bottleneck3_1/inner/dw1/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="32" kernel="3,3" output="32" pads_begin="1,1" pads_end="1,1" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -1428,11 +1428,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="65244" size="576"/>
-				<biases offset="65820" size="64"/>
+				<weights offset="130488" size="1152"/>
+				<biases offset="131640" size="128"/>
 			</blobs>
 		</layer>
-		<layer id="67" name="bottleneck3_1/inner/dw1/fn" precision="FP16" type="Activation">
+		<layer id="67" name="bottleneck3_1/inner/dw1/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -1451,7 +1451,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="68" name="bottleneck3_1/dim_inc/conv" precision="FP16" type="Convolution">
+		<layer id="68" name="bottleneck3_1/dim_inc/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="128" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -1470,11 +1470,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="65884" size="8192"/>
-				<biases offset="74076" size="256"/>
+				<weights offset="131768" size="16384"/>
+				<biases offset="148152" size="512"/>
 			</blobs>
 		</layer>
-		<layer id="69" name="bottleneck3_1/add" precision="FP16" type="Eltwise">
+		<layer id="69" name="bottleneck3_1/add" precision="FP32" type="Eltwise">
 			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
@@ -1499,7 +1499,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="70" name="bottleneck3_1/fn" precision="FP16" type="Activation">
+		<layer id="70" name="bottleneck3_1/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -1518,7 +1518,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="71" name="bottleneck3_2/dim_red/conv" precision="FP16" type="Convolution">
+		<layer id="71" name="bottleneck3_2/dim_red/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="32" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -1537,11 +1537,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="74332" size="8192"/>
-				<biases offset="82524" size="64"/>
+				<weights offset="148664" size="16384"/>
+				<biases offset="165048" size="128"/>
 			</blobs>
 		</layer>
-		<layer id="72" name="bottleneck3_2/dim_red/fn" precision="FP16" type="Activation">
+		<layer id="72" name="bottleneck3_2/dim_red/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -1560,7 +1560,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="73" name="bottleneck3_2/inner/dw1/conv" precision="FP16" type="Convolution">
+		<layer id="73" name="bottleneck3_2/inner/dw1/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="32" kernel="3,3" output="32" pads_begin="1,1" pads_end="1,1" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -1579,11 +1579,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="82588" size="576"/>
-				<biases offset="83164" size="64"/>
+				<weights offset="165176" size="1152"/>
+				<biases offset="166328" size="128"/>
 			</blobs>
 		</layer>
-		<layer id="74" name="bottleneck3_2/inner/dw1/fn" precision="FP16" type="Activation">
+		<layer id="74" name="bottleneck3_2/inner/dw1/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -1602,7 +1602,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="75" name="bottleneck3_2/dim_inc/conv" precision="FP16" type="Convolution">
+		<layer id="75" name="bottleneck3_2/dim_inc/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="128" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -1621,11 +1621,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="83228" size="8192"/>
-				<biases offset="91420" size="256"/>
+				<weights offset="166456" size="16384"/>
+				<biases offset="182840" size="512"/>
 			</blobs>
 		</layer>
-		<layer id="76" name="bottleneck3_2/add" precision="FP16" type="Eltwise">
+		<layer id="76" name="bottleneck3_2/add" precision="FP32" type="Eltwise">
 			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
@@ -1650,7 +1650,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="77" name="bottleneck3_2/fn" precision="FP16" type="Activation">
+		<layer id="77" name="bottleneck3_2/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -1669,7 +1669,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="78" name="bottleneck3_3/dim_red/conv" precision="FP16" type="Convolution">
+		<layer id="78" name="bottleneck3_3/dim_red/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="32" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -1688,11 +1688,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="91676" size="8192"/>
-				<biases offset="99868" size="64"/>
+				<weights offset="183352" size="16384"/>
+				<biases offset="199736" size="128"/>
 			</blobs>
 		</layer>
-		<layer id="79" name="bottleneck3_3/dim_red/fn" precision="FP16" type="Activation">
+		<layer id="79" name="bottleneck3_3/dim_red/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -1711,7 +1711,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="80" name="bottleneck3_3/inner/dw1/conv" precision="FP16" type="Convolution">
+		<layer id="80" name="bottleneck3_3/inner/dw1/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="32" kernel="3,3" output="32" pads_begin="1,1" pads_end="1,1" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -1730,11 +1730,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="99932" size="576"/>
-				<biases offset="100508" size="64"/>
+				<weights offset="199864" size="1152"/>
+				<biases offset="201016" size="128"/>
 			</blobs>
 		</layer>
-		<layer id="81" name="bottleneck3_3/inner/dw1/fn" precision="FP16" type="Activation">
+		<layer id="81" name="bottleneck3_3/inner/dw1/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -1753,7 +1753,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="82" name="bottleneck3_3/dim_inc/conv" precision="FP16" type="Convolution">
+		<layer id="82" name="bottleneck3_3/dim_inc/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="128" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -1772,11 +1772,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="100572" size="8192"/>
-				<biases offset="108764" size="256"/>
+				<weights offset="201144" size="16384"/>
+				<biases offset="217528" size="512"/>
 			</blobs>
 		</layer>
-		<layer id="83" name="bottleneck3_3/add" precision="FP16" type="Eltwise">
+		<layer id="83" name="bottleneck3_3/add" precision="FP32" type="Eltwise">
 			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
@@ -1801,7 +1801,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="84" name="bottleneck3_3/fn" precision="FP16" type="Activation">
+		<layer id="84" name="bottleneck3_3/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -1820,7 +1820,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="85" name="bottleneck4_0/skip/pooling" precision="FP16" type="Pooling">
+		<layer id="85" name="bottleneck4_0/skip/pooling" precision="FP32" type="Pooling">
 			<data exclude-pad="true" kernel="2,2" pads_begin="0,0" pads_end="0,0" pool-method="max" rounding_type="ceil" strides="2,2"/>
 			<input>
 				<port id="0">
@@ -1839,7 +1839,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="86" name="bottleneck4_0/skip/conv" precision="FP16" type="Convolution">
+		<layer id="86" name="bottleneck4_0/skip/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="256" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -1858,11 +1858,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="109020" size="65536"/>
-				<biases offset="174556" size="512"/>
+				<weights offset="218040" size="131072"/>
+				<biases offset="349112" size="1024"/>
 			</blobs>
 		</layer>
-		<layer id="87" name="bottleneck4_0/dim_red/conv" precision="FP16" type="Convolution">
+		<layer id="87" name="bottleneck4_0/dim_red/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="64" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -1881,11 +1881,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="175068" size="16384"/>
-				<biases offset="191452" size="128"/>
+				<weights offset="350136" size="32768"/>
+				<biases offset="382904" size="256"/>
 			</blobs>
 		</layer>
-		<layer id="88" name="bottleneck4_0/dim_red/fn" precision="FP16" type="Activation">
+		<layer id="88" name="bottleneck4_0/dim_red/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -1904,7 +1904,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="89" name="bottleneck4_0/inner/dw1/conv" precision="FP16" type="Convolution">
+		<layer id="89" name="bottleneck4_0/inner/dw1/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="64" kernel="3,3" output="64" pads_begin="1,1" pads_end="1,1" strides="2,2"/>
 			<input>
 				<port id="0">
@@ -1923,11 +1923,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="191580" size="1152"/>
-				<biases offset="192732" size="128"/>
+				<weights offset="383160" size="2304"/>
+				<biases offset="385464" size="256"/>
 			</blobs>
 		</layer>
-		<layer id="90" name="bottleneck4_0/inner/dw1/fn" precision="FP16" type="Activation">
+		<layer id="90" name="bottleneck4_0/inner/dw1/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -1946,7 +1946,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="91" name="bottleneck4_0/dim_inc/conv" precision="FP16" type="Convolution">
+		<layer id="91" name="bottleneck4_0/dim_inc/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="256" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -1965,11 +1965,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="192860" size="32768"/>
-				<biases offset="225628" size="512"/>
+				<weights offset="385720" size="65536"/>
+				<biases offset="451256" size="1024"/>
 			</blobs>
 		</layer>
-		<layer id="92" name="bottleneck4_0/add" precision="FP16" type="Eltwise">
+		<layer id="92" name="bottleneck4_0/add" precision="FP32" type="Eltwise">
 			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
@@ -1994,7 +1994,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="93" name="bottleneck4_0/fn" precision="FP16" type="Activation">
+		<layer id="93" name="bottleneck4_0/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -2013,7 +2013,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="94" name="bottleneck4_1/dim_red/conv" precision="FP16" type="Convolution">
+		<layer id="94" name="bottleneck4_1/dim_red/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="64" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -2032,11 +2032,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="226140" size="32768"/>
-				<biases offset="258908" size="128"/>
+				<weights offset="452280" size="65536"/>
+				<biases offset="517816" size="256"/>
 			</blobs>
 		</layer>
-		<layer id="95" name="bottleneck4_1/dim_red/fn" precision="FP16" type="Activation">
+		<layer id="95" name="bottleneck4_1/dim_red/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -2055,7 +2055,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="96" name="bottleneck4_1/inner/dw1/conv" precision="FP16" type="Convolution">
+		<layer id="96" name="bottleneck4_1/inner/dw1/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="64" kernel="3,3" output="64" pads_begin="1,1" pads_end="1,1" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -2074,11 +2074,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="259036" size="1152"/>
-				<biases offset="260188" size="128"/>
+				<weights offset="518072" size="2304"/>
+				<biases offset="520376" size="256"/>
 			</blobs>
 		</layer>
-		<layer id="97" name="bottleneck4_1/inner/dw1/fn" precision="FP16" type="Activation">
+		<layer id="97" name="bottleneck4_1/inner/dw1/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -2097,7 +2097,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="98" name="bottleneck4_1/dim_inc/conv" precision="FP16" type="Convolution">
+		<layer id="98" name="bottleneck4_1/dim_inc/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="256" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -2116,11 +2116,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="260316" size="32768"/>
-				<biases offset="293084" size="512"/>
+				<weights offset="520632" size="65536"/>
+				<biases offset="586168" size="1024"/>
 			</blobs>
 		</layer>
-		<layer id="99" name="bottleneck4_1/add" precision="FP16" type="Eltwise">
+		<layer id="99" name="bottleneck4_1/add" precision="FP32" type="Eltwise">
 			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
@@ -2145,7 +2145,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="100" name="bottleneck4_1/fn" precision="FP16" type="Activation">
+		<layer id="100" name="bottleneck4_1/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -2164,7 +2164,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="101" name="bottleneck4_2/dim_red/conv" precision="FP16" type="Convolution">
+		<layer id="101" name="bottleneck4_2/dim_red/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="64" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -2183,11 +2183,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="293596" size="32768"/>
-				<biases offset="326364" size="128"/>
+				<weights offset="587192" size="65536"/>
+				<biases offset="652728" size="256"/>
 			</blobs>
 		</layer>
-		<layer id="102" name="bottleneck4_2/dim_red/fn" precision="FP16" type="Activation">
+		<layer id="102" name="bottleneck4_2/dim_red/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -2206,7 +2206,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="103" name="bottleneck4_2/inner/dw1/conv" precision="FP16" type="Convolution">
+		<layer id="103" name="bottleneck4_2/inner/dw1/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="64" kernel="3,3" output="64" pads_begin="1,1" pads_end="1,1" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -2225,11 +2225,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="326492" size="1152"/>
-				<biases offset="327644" size="128"/>
+				<weights offset="652984" size="2304"/>
+				<biases offset="655288" size="256"/>
 			</blobs>
 		</layer>
-		<layer id="104" name="bottleneck4_2/inner/dw1/fn" precision="FP16" type="Activation">
+		<layer id="104" name="bottleneck4_2/inner/dw1/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -2248,7 +2248,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="105" name="bottleneck4_2/dim_inc/conv" precision="FP16" type="Convolution">
+		<layer id="105" name="bottleneck4_2/dim_inc/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="256" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -2267,11 +2267,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="327772" size="32768"/>
-				<biases offset="360540" size="512"/>
+				<weights offset="655544" size="65536"/>
+				<biases offset="721080" size="1024"/>
 			</blobs>
 		</layer>
-		<layer id="106" name="bottleneck4_2/add" precision="FP16" type="Eltwise">
+		<layer id="106" name="bottleneck4_2/add" precision="FP32" type="Eltwise">
 			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
@@ -2296,7 +2296,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="107" name="bottleneck4_2/fn" precision="FP16" type="Activation">
+		<layer id="107" name="bottleneck4_2/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -2315,7 +2315,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="108" name="bottleneck4_3/dim_red/conv" precision="FP16" type="Convolution">
+		<layer id="108" name="bottleneck4_3/dim_red/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="64" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -2334,11 +2334,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="361052" size="32768"/>
-				<biases offset="393820" size="128"/>
+				<weights offset="722104" size="65536"/>
+				<biases offset="787640" size="256"/>
 			</blobs>
 		</layer>
-		<layer id="109" name="bottleneck4_3/dim_red/fn" precision="FP16" type="Activation">
+		<layer id="109" name="bottleneck4_3/dim_red/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -2357,7 +2357,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="110" name="bottleneck4_3/inner/dw1/conv" precision="FP16" type="Convolution">
+		<layer id="110" name="bottleneck4_3/inner/dw1/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="64" kernel="3,3" output="64" pads_begin="1,1" pads_end="1,1" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -2376,11 +2376,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="393948" size="1152"/>
-				<biases offset="395100" size="128"/>
+				<weights offset="787896" size="2304"/>
+				<biases offset="790200" size="256"/>
 			</blobs>
 		</layer>
-		<layer id="111" name="bottleneck4_3/inner/dw1/fn" precision="FP16" type="Activation">
+		<layer id="111" name="bottleneck4_3/inner/dw1/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -2399,7 +2399,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="112" name="bottleneck4_3/dim_inc/conv" precision="FP16" type="Convolution">
+		<layer id="112" name="bottleneck4_3/dim_inc/conv" precision="FP32" type="Convolution">
 			<data dilations="1,1" group="1" kernel="1,1" output="256" pads_begin="0,0" pads_end="0,0" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -2418,11 +2418,11 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="395228" size="32768"/>
-				<biases offset="427996" size="512"/>
+				<weights offset="790456" size="65536"/>
+				<biases offset="855992" size="1024"/>
 			</blobs>
 		</layer>
-		<layer id="113" name="bottleneck4_3/add" precision="FP16" type="Eltwise">
+		<layer id="113" name="bottleneck4_3/add" precision="FP32" type="Eltwise">
 			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
@@ -2447,7 +2447,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="114" name="bottleneck4_3/fn" precision="FP16" type="Activation">
+		<layer id="114" name="bottleneck4_3/fn" precision="FP32" type="Activation">
 			<data alpha="1.0" type="elu"/>
 			<input>
 				<port id="0">
@@ -2466,7 +2466,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="115" name="out_pool" precision="FP16" type="Pooling">
+		<layer id="115" name="out_pool" precision="FP32" type="Pooling">
 			<data exclude-pad="true" kernel="6,3" pads_begin="0,0" pads_end="0,0" pool-method="max" rounding_type="ceil" strides="1,1"/>
 			<input>
 				<port id="0">
@@ -2485,7 +2485,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="116" name="ip_reid" precision="FP16" type="FullyConnected">
+		<layer id="116" name="ip_reid" precision="FP32" type="FullyConnected">
 			<data out-size="256"/>
 			<input>
 				<port id="0">
@@ -2502,8 +2502,8 @@
 				</port>
 			</output>
 			<blobs>
-				<weights offset="428508" size="131072"/>
-				<biases offset="559580" size="512"/>
+				<weights offset="857016" size="262144"/>
+				<biases offset="1119160" size="1024"/>
 			</blobs>
 		</layer>
 	</layers>
@@ -2643,7 +2643,7 @@
 	<meta_data>
 		<MO_version value="2019.1.0-341-gc9b66a2"/>
 		<cli_parameters>
-			<data_type value="FP16"/>
+			<data_type value="FP32"/>
 			<disable_fusing value="False"/>
 			<disable_gfusing value="False"/>
 			<disable_nhwc_to_nchw value="False"/>

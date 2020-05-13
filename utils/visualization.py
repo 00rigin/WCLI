@@ -1,7 +1,7 @@
 import cv2 as cv
 import numpy as np
 from utils.misc import COLOR_PALETTE
-
+from datetime import datetime
 
 def draw_detections(frame, detections):
     """Draws detections and labels"""
@@ -24,7 +24,7 @@ def draw_detections(frame, detections):
       
 
 
-def visualize_multicam_detections(frames, all_objects, fps=''):
+def visualize_multicam_detections(frames, all_objects, fps='', date=''):
     assert len(frames) == len(all_objects)
     vis = None
     for frame, objects in zip(frames, all_objects):
@@ -41,4 +41,5 @@ def visualize_multicam_detections(frames, all_objects, fps=''):
                                            cv.FONT_HERSHEY_SIMPLEX, 1, 2)
     cv.putText(vis, str(fps), (base_line*2, base_line*3),
                cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
+    cv.putText(vis, str(date), (base_line*10,base_line*3), cv.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2)
     return vis

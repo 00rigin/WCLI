@@ -6,6 +6,9 @@ import numpy as np
 from collections import namedtuple
 from matplotlib import pyplot as plt
 from PIL import Image
+import json
+from collections import OrderedDict
+
 
 class JotTable:
     def __init__(self):
@@ -66,22 +69,76 @@ class JotTable:
                     print("ID "+ str(send_table[0]) + " are detected!!!")
                     #sys.log("ID "+ str(send_table[0]) + "are detected!!!")
                     self.send_to_srv(send_table,frames)
+                    
                 else:
                     print("ID "+ str(send_table[0]) + " are exist too small time")
                     #sys.log("ID "+ str(send_table[0]) + "are exist too small time")
-                    
+    
+    
     
     def send_to_srv(self, send_table, frames):
         t_id = send_table[0]
         t_cam_id = send_table[1]
         print("ID : ",t_id)
         print("CAM ID : ", t_cam_id)
-        print("start time : ", send_table[2])
-        print("end time : ", send_table[3])
+        print("start time : ", str(send_table[2]))
+        print("end time : ", str(send_table[3]))
+        
+        temp_arr = []
 
         # showup 용 추후 보내는것 추가구현 필요
         cv.imshow("detected ID : "+str(t_id), self.t_pic[t_id])
-
+        #print(self.t_pic[t_id])
+        text = open("./test.txt", 'w')
+        
+        data = self.t_pic[t_id]
+        text.write(str(data))
+        text.close()
+        
+        
+        
+        
+        self.table_file(send_table)
+        
+        
+    
+    def table_file(self,send_table):
+        
+        jot_data = send_table
+        for i in range(len(send_table)):
+            send_table[i] = str(send_table[i])
+        
+        #print(type(send_table)) #class:list
+        #print(json.dumps(jot_data, ensure_ascii=False, indent="\t"))#error
+        jot_data = OrderedDict()
+        jot_data['p_id'] = send_table[0]
+        jot_data['cam_id'] = send_table[1]
+        jot_data['start_time1'] = send_table[2]
+        jot_data['end_time1'] = send_table[3]
+        jot_data['pic'] = []
+        
+        
+        for pic in self.t_pic[int(send_table[0])].tolist():
+            for pic_i in pic:
+                jot_data['pic'].append(pic_i)
+        pic_t = np.array(jot_data['pic'])
+        text1 = open("./test2.txt", 'w')
+        
+        data2 = jot_data['pic']
+        text1.write(str(data2))
+        text1.close()
+        text2 = open("./test3.txt", 'w')
+        
+        data3 = pic_t
+        text2.write(str(data3))
+        text2.close()
+        
+        
+        with open('jot.json', 'w', encoding = "utf-8") as table_file:
+            json.dump(jot_data, table_file, ensure_ascii=False, indent=' ')
+        
+        #cv.imshow("pic_t", pic_t)
+        print("save success")
 
 
   

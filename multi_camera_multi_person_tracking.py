@@ -10,7 +10,7 @@ import numpy as np
 import cv2 as cv
 
 
-
+from datetime import datetime
 from utils.network_wrappers import Detector, VectorCNN
 from mc_tracker.mct import MultiCameraTracker
 from utils.misc import read_py_config
@@ -125,7 +125,8 @@ def run(params, capture, detector, reid, jot): #params : args 임
 
     
         fps = round(1 / (time.time() - start), 1)
-        vis = visualize_multicam_detections(frames, tracked_objects, fps)
+        dates = datetime.now()
+        vis = visualize_multicam_detections(frames, tracked_objects, fps, dates)
         if not params.no_show:
             cv.imshow(win_name, vis)
             if cv.waitKey(1) == 27:
@@ -149,7 +150,7 @@ def main():
                         of cameras or paths to video files)', required=True)
 
     #parser.add_argument('-m', '--m_detector', type=str, required=True,  help='Path to the person detection model')
-    parser.add_argument('-m', '--m_detector', type=str, default='model/person-detection-retail-0013/FP16/person-detection-retail-0013.xml')
+    parser.add_argument('-m', '--m_detector', type=str, default='model/person-detection-retail-0013.xml')
     parser.add_argument('--t_detector', type=float, default=0.6,
                         help='Threshold for the person detection model')
 
@@ -161,8 +162,8 @@ def main():
     parser.add_argument('--config', type=str, default='config.py', required=False)
     parser.add_argument('--history_file', type=str, default='', required=False)
 
-    parser.add_argument('-d', '--device', type=str, default='CPU')
-    #parser.add_argument('-d', '--device', type=str, default='MYRIAD')
+    #parser.add_argument('-d', '--device', type=str, default='CPU')
+    parser.add_argument('-d', '--device', type=str, default='MYRIAD')
     parser.add_argument('-l', '--cpu_extension',
                         help='MKLDNN (CPU)-targeted custom layers.Absolute \
                               path to a shared library with the kernels impl.',
@@ -192,7 +193,7 @@ def main():
 
     # 20200511 추가
     jot = JotTable()
-
+    print(jot)
     run(args, capture, person_detector, person_recognizer, jot)
     log.info('Demo finished successfully')
 
