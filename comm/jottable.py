@@ -8,6 +8,9 @@ from matplotlib import pyplot as plt
 from PIL import Image
 import json
 from collections import OrderedDict
+import codecs
+
+from comm.numpy_json_encoder import NumpyEncoder
 
 
 class JotTable:
@@ -89,55 +92,41 @@ class JotTable:
         # showup 용 추후 보내는것 추가구현 필요
         cv.imshow("detected ID : "+str(t_id), self.t_pic[t_id])
         #print(self.t_pic[t_id])
-        text = open("./test.txt", 'w')
-        
-        data = self.t_pic[t_id]
-        text.write(str(data))
-        text.close()
-        
-        
-        
-        
         self.table_file(send_table)
         
         
     
     def table_file(self,send_table):
-        
-        jot_data = send_table
         for i in range(len(send_table)):
             send_table[i] = str(send_table[i])
-        
-        #print(type(send_table)) #class:list
-        #print(json.dumps(jot_data, ensure_ascii=False, indent="\t"))#error
-        jot_data = OrderedDict()
-        jot_data['p_id'] = send_table[0]
-        jot_data['cam_id'] = send_table[1]
-        jot_data['start_time1'] = send_table[2]
-        jot_data['end_time1'] = send_table[3]
-        jot_data['pic'] = []
-        
-        
-        for pic in self.t_pic[int(send_table[0])].tolist():
-            for pic_i in pic:
-                jot_data['pic'].append(pic_i)
-        pic_t = np.array(jot_data['pic'])
-        text1 = open("./test2.txt", 'w')
-        
-        data2 = jot_data['pic']
-        text1.write(str(data2))
-        text1.close()
-        text2 = open("./test3.txt", 'w')
-        
-        data3 = pic_t
-        text2.write(str(data3))
-        text2.close()
-        
-        
-        with open('jot.json', 'w', encoding = "utf-8") as table_file:
-            json.dump(jot_data, table_file, ensure_ascii=False, indent=' ')
-        
-        #cv.imshow("pic_t", pic_t)
+
+        filepath = "jot.json"
+        json.dump({'p_id' : send_table[0],
+                    'cam_id' : send_table[1],
+                    'start_time1' : send_table[2],
+                    'end_time1' : send_table[3],
+                    'pic': self.t_pic[int(send_table[0])].tolist()
+                    }, 
+                    codecs.open(filepath, 'w', encoding='utf-8'))
+
+
+        # 복구용
+        """
+        obj_text = codecs.open(filepath, 'r', encoding='utf-8').read()
+        json_load = json.loads(obj_text)
+        pic_restored = np.array(json_load['pic'], dtype=np.uint8)
+        p_id_restored = int(json_load['p_id'])
+        cam_id_restored = int(json_load['cam_id'])
+        s_time_restored = str(json_load['start_time1'])
+        e_time_restored = str(json_load['end_time1'])
+
+        print("p_id : ", p_id_restored)
+        print("cam_id : ", cam_id_restored)
+        print("s_time : ", s_time_restored)
+        print("e_time : ", e_time_restored)
+        cv.imshow("restored", pic_restored)
+        """
+
         print("save success")
 
 

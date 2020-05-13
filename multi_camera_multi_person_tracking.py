@@ -162,8 +162,8 @@ def main():
     parser.add_argument('--config', type=str, default='config.py', required=False)
     parser.add_argument('--history_file', type=str, default='', required=False)
 
-    #parser.add_argument('-d', '--device', type=str, default='CPU')
-    parser.add_argument('-d', '--device', type=str, default='MYRIAD')
+    parser.add_argument('-d', '--device', type=str, default='CPU')
+    #parser.add_argument('-d', '--device', type=str, default='MYRIAD')
     parser.add_argument('-l', '--cpu_extension',
                         help='MKLDNN (CPU)-targeted custom layers.Absolute \
                               path to a shared library with the kernels impl.',
