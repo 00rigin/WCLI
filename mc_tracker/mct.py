@@ -4,14 +4,15 @@ import queue
 import numpy as np
 from scipy.spatial.distance import cosine
 
-from .sct import SingleCameraTracker, clusters_distance, THE_BIGGEST_DISTANCE
+from .sct import SingleCameraTracker, clusters_distance, THE_BIGGEST_DISTANCE, ClusterFeature
+from listtest import ListTest
 
 # for jason
 import json
 from collections import OrderedDict
 import codecs
 #추가함
-from encoder import NumpyEncoder
+
 
 
 
@@ -23,7 +24,7 @@ class MultiCameraTracker:
                  ):
         self.scts = []
         self.time = 0
-        self.last_global_id = 0
+        self.last_global_id = 1000
         self.global_ids_queue = queue.Queue()
         self.time_window = time_window  # should be greater than time window in scts
         self.global_match_thresh = global_match_thresh
@@ -31,7 +32,10 @@ class MultiCameraTracker:
             self.scts.append(SingleCameraTracker(i, self._get_next_global_id,
                                                  self._release_global_id,
                                                  reid_model, **sct_config))
-        self._count_ = 0
+
+
+
+        
 
     def make_file(self, tracks):
         file_data = OrderedDict()
@@ -39,19 +43,21 @@ class MultiCameraTracker:
         #print(json.dumps(file_data, ensure_ascii=False, indent="\t"))
         #print(type(tracks[0]['features'][0]))
         
+        
         for track in tracks:
-    
-            #file_data['id'] = track['id']
-            file_data['id'] = "target"
+            file_data['id'] = track['id']
             file_data['cam_id'] = track['cam_id']
             file_data['avg_feature'] = track['avg_feature'].tolist()
             file_data['f_cluster'] = str(track['f_cluster'])
             file_data['features'] = []
             for obj in (track['features']):
                 file_data['features'].append(obj.tolist())    
-            
             with open('./log.json', 'w', encoding="utf-8") as make_file: 
                 json.dump(file_data, make_file, ensure_ascii=False, indent='\t')
+        
+
+    def _get_origin_cluster_(self):
+        return self._origin_cluster_
 
 
     def process(self, frames, all_detections, masks=None):
@@ -70,11 +76,12 @@ class MultiCameraTracker:
             
             all_tracks += sct.get_tracks()
             
+            #all_tracks 에 모든정보 들어있음. id, camid, features, avg_freater, f_cluster_feature
+
+                   
+            #print("*******************************")
+            #print(all_tracks)
             
-            """       
-            print("*******************************")
-            print(type(all_tracks))
-            """
             """
             f = open("./log.txt", 'w')
             f.write(str(all_tracks))
@@ -84,6 +91,19 @@ class MultiCameraTracker:
         """
         print(all_tracks)
         """
+        #print(all_tracks[0]['f_cluster'])
+        #print(all_tracks[0]['id'])
+        #print(type(all_tracks[0]['f_cluster']))
+
+        #20200521 f_cluster 전송 가능성 테스트 한 부분
+        """
+        listtest = ListTest()
+        first_cluseter = all_tracks[0]['f_cluster'].get_clusters_matrix()
+
+        listtest.chk(all_tracks[0]['f_cluster'], first_cluseter)
+        """
+
+
         
         
 
@@ -107,6 +127,7 @@ class MultiCameraTracker:
         self.time += 1
         # 리턴 추가해줌
         return all_tracks
+        
 
     # 피쳐값 비교하는 부분
     def _compute_mct_distance_matrix(self, all_tracks):
@@ -155,6 +176,7 @@ class MultiCameraTracker:
         if self.global_ids_queue.empty():
             self.global_ids_queue.put(self.last_global_id)
             self.last_global_id += 1
+            #self.last_global_id -= 1
 
         return self.global_ids_queue.get_nowait()
 
@@ -179,3 +201,14 @@ class MultiCameraTracker:
             history.append(cam_tracks)
 
         return history
+
+    #20200519 추가
+    def get_timestamp(self):
+        time = []
+        for sct in self.scts:
+            cam_tracks = sct.get_archived_tracks() + sct.get_tracks()
+            for i in range(len(cam_tracks)):
+                cam_tracks[i] = {'timestamps':  cam_tracks[i]['timestamps']}
+
+            time.append(cam_tracks)
+        return time

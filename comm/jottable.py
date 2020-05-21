@@ -11,6 +11,7 @@ from collections import OrderedDict
 import codecs
 
 from comm.numpy_json_encoder import NumpyEncoder
+from mc_tracker.sct import ClusterFeature, clusters_distance
 
 
 class JotTable:
@@ -22,7 +23,7 @@ class JotTable:
         
     #####func comment
 
-    def check_jot(self, tracked_objects, frames):
+    def check_jot(self, tracked_objects, frames, tracks_data):
 
         cur_time = datetime.now()
         for i, tracks in enumerate(tracked_objects):
@@ -71,13 +72,41 @@ class JotTable:
                 if(temp_t_2 - temp_t_1 >= self.th_hold):
                     print("ID "+ str(send_table[0]) + " are detected!!!")
                     #sys.log("ID "+ str(send_table[0]) + "are detected!!!")
+                    self.send_to_pi(send_table, tracks_data)
                     self.send_to_srv(send_table,frames)
+                    
                     
                 else:
                     print("ID "+ str(send_table[0]) + " are exist too small time")
                     #sys.log("ID "+ str(send_table[0]) + "are exist too small time")
     
-    
+    def send_to_pi(self, send_table, tracks):
+        pi_table = []
+        
+        for i, track in enumerate(tracks):
+            if track['id'] == send_table[0]:
+                f_cluster_mat = track['f_cluster'].get_clusters_matrix() #f_cluster 의 진짜 모습 두둥!!
+                avg_feature = track['avg_feature']
+                # 리스트로 저장시
+                """
+                pi_table.append(send_table[0])
+                pi_table.append(f_cluster_mat)
+                pi_table.append(avg_feature)
+                """
+                # 딕셔너리 저장시
+                pi_table = {'f_cluster_mat' : f_cluster_mat,
+                            'avg_feature' : avg_feature,
+                            'id' : send_table[0]}
+        # 확인용
+        # print(pi_table)
+        self.table_file()
+
+                
+                
+
+
+
+
     
     def send_to_srv(self, send_table, frames):
         t_id = send_table[0]
@@ -86,13 +115,10 @@ class JotTable:
         print("CAM ID : ", t_cam_id)
         print("start time : ", str(send_table[2]))
         print("end time : ", str(send_table[3]))
-        
-        temp_arr = []
 
         # showup 용 추후 보내는것 추가구현 필요
         cv.imshow("detected ID : "+str(t_id), self.t_pic[t_id])
-        #print(self.t_pic[t_id])
-        self.table_file(send_table)
+        #self.table_file(send_table) 
         
         
     

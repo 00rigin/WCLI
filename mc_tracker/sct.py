@@ -22,9 +22,13 @@ from scipy.spatial.distance import cosine, cdist
 
 from utils.misc import none_to_zero
 
+
+
 THE_BIGGEST_DISTANCE = 10.
 
 TrackedObj = namedtuple('TrackedObj', 'rect label') #20200511 변경함
+
+
 
 
 class ClusterFeature:
@@ -32,6 +36,7 @@ class ClusterFeature:
         self.clusters = []
         self.clusters_sizes = []
         self.feature_len = feature_len
+        
         if initial_feature is not None:
             self.clusters.append(initial_feature)
             self.clusters_sizes.append(1)
@@ -59,8 +64,15 @@ class ClusterFeature:
     def __len__(self):
         return len(self.clusters)
 
-
+#here
 def clusters_distance(clusters1, clusters2):
+    """
+    print("cluster 1 len: ", len(clusters1))
+    print("cluster 2 len: ",len(clusters2))
+    print("cluster 1 : ", clusters1)
+    print("cluster 2 : ", clusters2)
+    print("cluster1 dtype : ", type(clusters1))
+    """
     if len(clusters1) > 0 and len(clusters2) > 0:
         distances = cdist(clusters1.get_clusters_matrix(),
                           clusters2.get_clusters_matrix(), 'cosine')
@@ -74,6 +86,7 @@ def clusters_vec_distance(clusters, feature):
                           feature.reshape(1, -1), 'cosine')
         return np.amin(distances)
     return 0.5
+
 
 
 class SingleCameraTracker:
@@ -104,6 +117,7 @@ class SingleCameraTracker:
         self.max_bbox_velocity = max_bbox_velocity
         self.detection_occlusion_thresh = detection_occlusion_thresh
         self.track_detection_iou_thresh = track_detection_iou_thresh
+
 
     def process(self, frame, detections, mask=None):
         reid_features = [None]*len(detections)
@@ -315,6 +329,8 @@ class SingleCameraTracker:
                 'avg_feature': feature.copy() if feature is not None else None,
                 'f_cluster': ClusterFeature(self.n_clusters, feature)}
 
+
+
     def _compute_detections_assignment_cost(self, active_tracks_idx, detections, features):
         affinity_matrix = np.zeros((len(detections), len(active_tracks_idx)), dtype=np.float32)
         for i, idx in enumerate(active_tracks_idx):
@@ -411,3 +427,5 @@ class SingleCameraTracker:
         if velocity > self.max_bbox_velocity:
             return False
         return True
+
+

@@ -19,8 +19,12 @@ class MulticamCapture:
             for id in sources:
                 log.info('Connection  cam {}'.format(id))
                 cap = cv.VideoCapture(id)
-                cap.set(cv.CAP_PROP_FRAME_WIDTH, 320)
-                cap.set(cv.CAP_PROP_FRAME_HEIGHT, 240)
+                # CPU 쓸때
+                cap.set(cv.CAP_PROP_FRAME_WIDTH, 1280)
+                cap.set(cv.CAP_PROP_FRAME_HEIGHT, 720)
+                # MTRIAD 쓸때
+                #cap.set(cv.CAP_PROP_FRAME_WIDTH, 320)
+                #cap.set(cv.CAP_PROP_FRAME_HEIGHT, 240)
                 cap.set(cv.CAP_PROP_FPS, 30)
                 cap.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*'MJPG'))
                 assert cap.isOpened()

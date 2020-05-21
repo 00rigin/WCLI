@@ -8,7 +8,7 @@ import logging as log
 import sys
 import numpy as np
 import cv2 as cv
-
+import copy
 
 from datetime import datetime
 from utils.network_wrappers import Detector, VectorCNN
@@ -22,6 +22,8 @@ from comm.jottable import JotTable
 from openvino.inference_engine import IECore # pylint: disable=import-error,E0611
 
 log.basicConfig(stream=sys.stdout, level=log.DEBUG)
+
+
 
 
 class FramesThreadBody:
@@ -94,8 +96,11 @@ def run(params, capture, detector, reid, jot): #params : args 임
         #tracker.process(frames, all_detections, all_masks)
         feature_data = tracker.process(frames, all_detections, all_masks)
         #tracker.make_file(feature_data)
-        
+        #print(feature_data)
+
         tracked_objects = tracker.get_tracked_objects()
+
+        #print(tracker.get_timestamp())
 
         
         #print("###################################")
@@ -119,9 +124,17 @@ def run(params, capture, detector, reid, jot): #params : args 임
         #t_frames = np.array(frames)
         #print(type(t_frames))
         #20200511 추가
+        track_data = copy.deepcopy(feature_data)
+        for track in track_data:
+            del track['features']
+            del track['boxes']
+            del track['timestamps']
+            del track['cam_id']
 
-        #jot.check_jot(tracked_objects, t_frames)
-        jot.check_jot(tracked_objects, frames)
+        #print("####################################")
+        #print(track_data)
+        jot.check_jot(tracked_objects, frames, track_data)
+        
 
     
         fps = round(1 / (time.time() - start), 1)
@@ -193,8 +206,8 @@ def main():
 
     # 20200511 추가
     jot = JotTable()
-    print(jot)
     run(args, capture, person_detector, person_recognizer, jot)
+
     log.info('Demo finished successfully')
 
     
