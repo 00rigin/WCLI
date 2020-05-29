@@ -8,8 +8,8 @@ from comm.numpy_json_encoder import NumpyEncoder
 
 class SEND:
     def __init__(self):
-        self.pi_filepath = "pi_jot_1.json"
-        self.srv_filepath = "srv_jot_1.json"
+        self.pi_filepath = "pi_jot.json"
+        self.srv_filepath = "srv_jot.json"
 
 
     def table_file(self,send_table, flag):
