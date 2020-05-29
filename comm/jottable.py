@@ -10,8 +10,8 @@ import json
 from collections import OrderedDict
 import codecs
 
-from comm.numpy_json_encoder import NumpyEncoder
-from mc_tracker.sct import ClusterFeature, clusters_distance
+
+from comm.send import SEND
 
 
 class JotTable:
@@ -24,6 +24,7 @@ class JotTable:
     #####func comment
 
     def check_jot(self, tracked_objects, frames, tracks_data):
+        send = SEND()
 
         cur_time = datetime.now()
         for i, tracks in enumerate(tracked_objects):
@@ -68,19 +69,17 @@ class JotTable:
                 
                 temp_t_1 = float(str(send_table[2]).split(':')[2])
                 temp_t_2 = float(str(send_table[3]).split(':')[2])
-                print((temp_t_2 - temp_t_1))
+                #print((temp_t_2 - temp_t_1))
                 if(temp_t_2 - temp_t_1 >= self.th_hold):
                     print("ID "+ str(send_table[0]) + " are detected!!!")
-                    #sys.log("ID "+ str(send_table[0]) + "are detected!!!")
-                    self.send_to_pi(send_table, tracks_data)
-                    self.send_to_srv(send_table,frames)
-                    
+                    self.send_to_pi(send, send_table, tracks_data)
+                    #self.send_to_srv(send, send_table,frames)
                     
                 else:
                     print("ID "+ str(send_table[0]) + " are exist too small time")
-                    #sys.log("ID "+ str(send_table[0]) + "are exist too small time")
     
-    def send_to_pi(self, send_table, tracks):
+    def send_to_pi(self, send, send_table, tracks):
+        flag = "pi"
         pi_table = []
         
         for i, track in enumerate(tracks):
@@ -88,27 +87,24 @@ class JotTable:
                 f_cluster_mat = track['f_cluster'].get_clusters_matrix() #f_cluster 의 진짜 모습 두둥!!
                 avg_feature = track['avg_feature']
                 # 리스트로 저장시
-                """
+                
                 pi_table.append(send_table[0])
                 pi_table.append(f_cluster_mat)
                 pi_table.append(avg_feature)
-                """
+                
                 # 딕셔너리 저장시
+                """
                 pi_table = {'f_cluster_mat' : f_cluster_mat,
                             'avg_feature' : avg_feature,
                             'id' : send_table[0]}
+                """
         # 확인용
         # print(pi_table)
-        self.table_file()
-
-                
-                
-
-
-
+        send.table_file(pi_table ,flag)
 
     
     def send_to_srv(self, send_table, frames):
+        flag = "srv"
         t_id = send_table[0]
         t_cam_id = send_table[1]
         print("ID : ",t_id)
@@ -118,42 +114,11 @@ class JotTable:
 
         # showup 용 추후 보내는것 추가구현 필요
         cv.imshow("detected ID : "+str(t_id), self.t_pic[t_id])
-        #self.table_file(send_table) 
+        send.table_file(send_table, flag) 
         
         
     
-    def table_file(self,send_table):
-        for i in range(len(send_table)):
-            send_table[i] = str(send_table[i])
-
-        filepath = "jot.json"
-        json.dump({'p_id' : send_table[0],
-                    'cam_id' : send_table[1],
-                    'start_time1' : send_table[2],
-                    'end_time1' : send_table[3],
-                    'pic': self.t_pic[int(send_table[0])].tolist()
-                    }, 
-                    codecs.open(filepath, 'w', encoding='utf-8'))
-
-
-        # 복구용
-        """
-        obj_text = codecs.open(filepath, 'r', encoding='utf-8').read()
-        json_load = json.loads(obj_text)
-        pic_restored = np.array(json_load['pic'], dtype=np.uint8)
-        p_id_restored = int(json_load['p_id'])
-        cam_id_restored = int(json_load['cam_id'])
-        s_time_restored = str(json_load['start_time1'])
-        e_time_restored = str(json_load['end_time1'])
-
-        print("p_id : ", p_id_restored)
-        print("cam_id : ", cam_id_restored)
-        print("s_time : ", s_time_restored)
-        print("e_time : ", e_time_restored)
-        cv.imshow("restored", pic_restored)
-        """
-
-        print("save success")
+    
 
 
   

@@ -67,7 +67,10 @@ def run(params, capture, detector, reid, jot): #params : args 임
     else:
         output_video = None
 
+    print("##################################################################")
+
     while thread_body.process:
+        
         start = time.time()
         try:
             frames = thread_body.frames_queue.get_nowait()
@@ -86,43 +89,9 @@ def run(params, capture, detector, reid, jot): #params : args 임
             all_detections[i] = [det[0] for det in detections]
             all_masks[i] = [det[2] for det in detections if len(det) == 3]
 
-        """
-        print("###################################")
-        print("all_detections: ", all_detections)
-        print("all_mask: ", all_masks)
-        """
-
-        # 원본
-        #tracker.process(frames, all_detections, all_masks)
         feature_data = tracker.process(frames, all_detections, all_masks)
-        #tracker.make_file(feature_data)
-        #print(feature_data)
-
         tracked_objects = tracker.get_tracked_objects()
 
-        #print(tracker.get_timestamp())
-
-        
-        #print("###################################")
-        #print(tracked_objects)
-        
-        ####################################################
-        # ID 0 번만 찾게 만들기 (가상)
-        """
-        for i in range(len(tracked_objects)):
-            _len = len(tracked_objects[i])
-            for j in range(_len):
-                print(i,j)
-                #print((tracked_objects[i])[j])
-                if ((tracked_objects[i])[j]).label is not "ID 0":
-                    del (tracked_objects[i])[j]
-                    _len = len(tracked_objects[i])
-                    """
-        #########################################################
-
-        
-        #t_frames = np.array(frames)
-        #print(type(t_frames))
         #20200511 추가
         track_data = copy.deepcopy(feature_data)
         for track in track_data:
@@ -131,13 +100,13 @@ def run(params, capture, detector, reid, jot): #params : args 임
             del track['timestamps']
             del track['cam_id']
 
-        #print("####################################")
-        #print(track_data)
+        #jottable 넘기는 함수 콜
         jot.check_jot(tracked_objects, frames, track_data)
-        
 
-    
+
         fps = round(1 / (time.time() - start), 1)
+
+        #시간 처리
         dates = datetime.now()
         vis = visualize_multicam_detections(frames, tracked_objects, fps, dates)
         if not params.no_show:
@@ -154,6 +123,8 @@ def run(params, capture, detector, reid, jot): #params : args 임
         history = tracker.get_all_tracks_history()
         with open(params.history_file, 'w') as outfile:
             json.dump(history, outfile)
+
+    print("##################################################################")
 
 def main():
     """Prepares data for the person recognition demo"""

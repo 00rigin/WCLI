@@ -21,6 +21,7 @@ from scipy.optimize import linear_sum_assignment
 from scipy.spatial.distance import cosine, cdist
 
 from utils.misc import none_to_zero
+from comm.recv import RECV
 
 
 
@@ -66,13 +67,7 @@ class ClusterFeature:
 
 #here
 def clusters_distance(clusters1, clusters2):
-    """
-    print("cluster 1 len: ", len(clusters1))
-    print("cluster 2 len: ",len(clusters2))
-    print("cluster 1 : ", clusters1)
-    print("cluster 2 : ", clusters2)
-    print("cluster1 dtype : ", type(clusters1))
-    """
+
     if len(clusters1) > 0 and len(clusters2) > 0:
         distances = cdist(clusters1.get_clusters_matrix(),
                           clusters2.get_clusters_matrix(), 'cosine')
@@ -117,10 +112,15 @@ class SingleCameraTracker:
         self.max_bbox_velocity = max_bbox_velocity
         self.detection_occlusion_thresh = detection_occlusion_thresh
         self.track_detection_iou_thresh = track_detection_iou_thresh
+         #20200529 리시브모듈 테스트용 
+        self.recv = RECV()
+        self.flag = True
 
 
-    def process(self, frame, detections, mask=None):
+    def process(self, frame, detections, mask=None): 
         reid_features = [None]*len(detections)
+
+
         if self.reid_model:
             reid_features = self._get_embeddings(frame, detections, mask)
 
@@ -128,7 +128,33 @@ class SingleCameraTracker:
         if self.time % self.time_window == 0:
             self._create_new_tracks(detections, reid_features, assignment)
             self._merge_tracks()
+
+        self.add_recv_tracks()#20200529 리시브한 데이터 리스트에 추가하는 함수 콜하는 부분.
         self.time += 1
+        
+        #20200529 self.tracks 확인용
+        """
+        for t in self.tracks:
+            print(t['id'])
+        print("********")
+        """
+    
+    ## (๑´ڡ`๑) recv 에 대한 테스트용 20200529
+    def add_recv_tracks(self):
+        if self.time > 0 and self.time % self.time_window == 0:
+                if(self.flag):
+                    add_data = self.recv.recov_file(True)
+                    self.flag = False
+                    self.tracks.append({'id': add_data['id'],
+                        'cam_id': 0,
+                        'boxes': [],
+                        'timestamps': [0],
+                        'features': add_data['avg_feature'].copy(),
+                        'avg_feature': add_data['avg_feature'],
+                        'f_cluster': ClusterFeature(4, add_data['f_cluster_mat'])})
+        
+        
+        
 
     def get_tracked_objects(self):
         objs = []

@@ -1,20 +1,13 @@
 
 import queue
-
 import numpy as np
+
 from scipy.spatial.distance import cosine
-
 from .sct import SingleCameraTracker, clusters_distance, THE_BIGGEST_DISTANCE, ClusterFeature
-from listtest import ListTest
-
 # for jason
 import json
 from collections import OrderedDict
 import codecs
-#추가함
-
-
-
 
 class MultiCameraTracker:
     def __init__(self, num_sources, reid_model,
@@ -33,16 +26,11 @@ class MultiCameraTracker:
                                                  self._release_global_id,
                                                  reid_model, **sct_config))
 
-
-
-        
-
     def make_file(self, tracks):
         file_data = OrderedDict()
         #file_data = tracks
         #print(json.dumps(file_data, ensure_ascii=False, indent="\t"))
         #print(type(tracks[0]['features'][0]))
-        
         
         for track in tracks:
             file_data['id'] = track['id']
@@ -63,30 +51,18 @@ class MultiCameraTracker:
     def process(self, frames, all_detections, masks=None):
         assert len(frames) == len(all_detections) == len(self.scts)
         all_tracks = []
+
         for i, sct in enumerate(self.scts):
+
             if masks:
                 mask = masks[i]
             else:
                 mask = None
             sct.process(frames[i], all_detections[i], mask)
-
-            """
-            sct.get_tracks() : 하면 tuple 형식으로 id 와 좌표, 피쳐값 저장됨.
-            """
-            
             all_tracks += sct.get_tracks()
             
             #all_tracks 에 모든정보 들어있음. id, camid, features, avg_freater, f_cluster_feature
-
-                   
-            #print("*******************************")
-            #print(all_tracks)
-            
-            """
-            f = open("./log.txt", 'w')
-            f.write(str(all_tracks))
-            #while(True): a = 1
-            """
+ 
         # for make json file
         """
         print(all_tracks)
@@ -103,42 +79,34 @@ class MultiCameraTracker:
         listtest.chk(all_tracks[0]['f_cluster'], first_cluseter)
         """
 
-
-        
-        
-
         if self.time > 0 and self.time % self.time_window == 0:
+            #print(all_tracks)
             distance_matrix = self._compute_mct_distance_matrix(all_tracks)
             assignment = self._compute_greedy_assignment(distance_matrix)
 
-            #print(assignment)
-
-            
 
             for i, idx in enumerate(assignment):
                 if idx is not None and all_tracks[idx]['id'] is not None and all_tracks[i]['timestamps'] is not None:
                     if all_tracks[idx]['id'] >= all_tracks[i]['id']:
                         if all_tracks[idx]['timestamps'][0] >= all_tracks[i]['timestamps'][0]:
                             self.scts[all_tracks[idx]['cam_id']].check_and_merge(all_tracks[i], all_tracks[idx])
+                           
                     else:
                         if all_tracks[idx]['timestamps'][0] <= all_tracks[i]['timestamps'][0]:
                             self.scts[all_tracks[i]['cam_id']].check_and_merge(all_tracks[idx], all_tracks[i])
+                            
 
         self.time += 1
+
+        #print(self.scts)
         # 리턴 추가해줌
         return all_tracks
         
-
     # 피쳐값 비교하는 부분
     def _compute_mct_distance_matrix(self, all_tracks):
         distance_matrix = THE_BIGGEST_DISTANCE * np.eye(len(all_tracks), dtype=np.float32)
         for i, track1 in enumerate(all_tracks):
             for j, track2 in enumerate(all_tracks):
-                #if(self._count_ == 5):
-                    #print(track1['avg_feature'])
-                    #print("------------------------------")
-                    #print(track2['avg_feature'])
-                #self._count_+=1
 
                 if j >= i:
                     break
@@ -176,12 +144,12 @@ class MultiCameraTracker:
         if self.global_ids_queue.empty():
             self.global_ids_queue.put(self.last_global_id)
             self.last_global_id += 1
-            #self.last_global_id -= 1
 
         return self.global_ids_queue.get_nowait()
 
     def _release_global_id(self, id):
-        assert id <= self.last_global_id
+        #20200529 1000번 아이디 왔을 때 0번 아이디 에러 처리 위해 잠시 지움.
+        #assert id <= self.last_global_id
         self.global_ids_queue.put(id)
 
     def get_tracked_objects(self):
