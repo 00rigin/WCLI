@@ -17,7 +17,7 @@ class MultiCameraTracker:
                  ):
         self.scts = []
         self.time = 0
-        self.last_global_id = 1000
+        self.last_global_id = 0
         self.global_ids_queue = queue.Queue()
         self.time_window = time_window  # should be greater than time window in scts
         self.global_match_thresh = global_match_thresh
